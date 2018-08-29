@@ -91,7 +91,7 @@ if __name__ == "__main__":
         "30:07:4d:1c:af:60", # joern samsung s8
         "192.168.1.68", # joern samsung s8 rf
         "192.168.1.107", # joern xps rf
-        "10.0.2.24" # joern xperia
+        "10.0.2.24", # joern xperia
         "10.0.2.48" # stine iphone
     ]
     night = [0, 7]
