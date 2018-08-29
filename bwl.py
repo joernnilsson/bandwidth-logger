@@ -48,9 +48,9 @@ def wifi_device_present(devices):
 def unit_spec(spec):
     if spec == "ms":
         return (1/1000.0, "s")
-    if spec == "Mbit/s":
+    if spec == "Mbit/s" or "Mbits/s":
         return (1024*1024, "bit/s")
-    if spec == "kbit/s" or spec == "Kbit/s":
+    if spec == "kbit/s" or spec == "Kbit/s" or spec == "kbits/s" or spec == "Kbits/s":
         return (1024, "bit/s")
     return (1, spec)
 
