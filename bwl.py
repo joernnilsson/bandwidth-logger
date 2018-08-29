@@ -12,17 +12,20 @@ def get_bw(interface, msecs):
     avg_points = 10
     cmd = ["bwm-ng", "-I", interface, "-o", "csv", "-T", "avg", "-t", str((msecs/avg_points)-1), "-u", "bytes", "-c", str(avg_points), "-A", str(msecs/1000)]
     print(" ".join(cmd))
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    proc.wait()
 
-    for line in reversed(proc.stdout.decode("utf-8", errors='ignore').splitlines()):
-        parts = line.split(";")
+    lines = proc.stdout.readlines()
+    for line in reversed(lines):
+        parts = line.decode("utf-8", errors='ignore').split(";")
         if parts[1] == interface:
             return (float(parts[3]), float(parts[4]))
 
 def ping(host):
     cmd = ["ping", "-c", "1", host]
     print(" ".join(cmd))
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    proc.wait()
 
     return proc.returncode == 0
 
@@ -54,16 +57,17 @@ def unit_spec(spec):
 def speed_test():
     cmd = ["speedtest-cli", "--simple"]
     print(" ".join(cmd))
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    proc.wait()
 
     out = {"connected": False}
 
     if proc.returncode == 0:
 
         out["connected"] = True
-        for line in proc.stdout.decode("utf-8", errors='ignore').splitlines():
-            parts = line.split(" ")
-            unit = unit_spec(parts[2])
+        for line in proc.stdout.readlines():
+            parts = line.decode("utf-8", errors='ignore').split(" ")
+            unit = unit_spec(parts[2].strip())
             out[parts[0].lower().replace(":", "").strip()] = float(parts[1]) * unit[0]
 
     return out
